@@ -26,4 +26,4 @@ jobs:
         run: |
           cargo build --target=x86_64-pc-windows-gnu --lib --release
           gcc -c main.c -o main.o
-          gcc -shared -static-libgcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+          gcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll

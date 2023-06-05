@@ -1,17 +1,26 @@
+# A Minimal Reproducible Example To Show "Warning: corrupt .drectve at end of def file" Warning
+
+``` console
+$ cargo build --target=x86_64-pc-windows-gnu --lib --release
+
+$ gcc -c main.c -o main.o
+
+$ gcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll 
 ```
-cargo build --target=x86_64-pc-windows-gnu --lib --release
 
-$env:R_HOME = "C:/Program Files/R/R-4.3.0"
-$env:PATH = "${env:R_HOME}\bin\x64;C:\rtools43\usr\bin;C:\rtools43\x86_64-w64-mingw32.static.posix\bin;C:\msys64\mingw64\bin;${env:PATH}"
+And we'll see this warning:
 
-gcc -I"C:/R/include" -DNDEBUG -I"c:/rtools43/x86_64-w64-mingw32.static.posix/include" -O2 -Wall -gdwarf-2 -std=gnu99 -mfpmath=sse -msse2 -mstackrealign  -UNDEBUG -Wall -pedantic -g -O0 -c main.c -o main.o
+```
+Warning: corrupt .drectve at end of def file
+Warning: corrupt .drectve at end of def file
+```
 
-gcc -shared -static-libgcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll -Lc:/rtools43/x86_64-w64-mingw32.static.posix/lib/x64 -Lc:/rtools43/x86_64-w64-mingw32.static.posix/lib -LC:/R/bin/x64
+### Dumpbin result
 
+```
 dumpbin.exe .\target\x86_64-pc-windows-gnu\release\librust170_gnu_warning.a
 ```
 
-Result:
 ```
 Microsoft (R) COFF/PE Dumper Version 14.29.30137.0
 Copyright (C) Microsoft Corporation.  All rights reserved.
