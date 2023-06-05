@@ -8,15 +8,22 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { rust-version: '1.70-msvc' }
+          - { rust-version: '1.70-gnu'  }
+          - { rust-version: '1.69-msvc' }
 
     steps:
       - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.config.rust-version }}
+          targets: x86_64-pc-windows-gnu
       - name: compile
         run: |
-          find / -name dumpbin.exe
-          # cargo build --target=x86_64-pc-windows-gnu --lib --release
-          # gcc -c main.c -o main.o
-          # gcc -shared -static-libgcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
-          # dumpbin.exe .\target\x86_64-pc-windows-gnu\release\librust170_gnu_warning.a
-        shell: bash
+          cargo build --target=x86_64-pc-windows-gnu --lib --release
+          gcc -c main.c -o main.o
+          gcc -shared -static-libgcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
