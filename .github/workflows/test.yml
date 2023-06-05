@@ -1,0 +1,22 @@
+name: test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  docs:
+    runs-on: Windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - name: Docs
+        run: |
+          cargo build --target=x86_64-pc-windows-gnu --lib --release
+          gcc -c main.c -o main.o
+          gcc -shared -static-libgcc -o testpkgrust170_gnu_warning.dll main.o -L./target/x86_64-pc-windows-gnu/release -lrust170_gnu_warning -lws2_32 -ladvapi32 -luserenv -lbcrypt -lntdll
+          dumpbin.exe .\target\x86_64-pc-windows-gnu\release\librust170_gnu_warning.a
